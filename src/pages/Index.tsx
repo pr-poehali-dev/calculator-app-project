@@ -1,7 +1,7 @@
-import Calculator from '@/components/Calculator';
+import Synthesizer from '@/components/Synthesizer';
 
 const Index = () => {
-  return <Calculator />;
+  return <Synthesizer />;
 };
 
 export default Index;
