@@ -16,7 +16,26 @@ export default function Calculator() {
   const [memory, setMemory] = useState(0);
   const [history, setHistory] = useState<HistoryItem[]>([]);
 
+  const playClickSound = () => {
+    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.frequency.value = 800;
+    oscillator.type = 'sine';
+    
+    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.05);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.05);
+  };
+
   const handleNumber = (num: string) => {
+    playClickSound();
     if (newNumber) {
       setDisplay(num);
       setNewNumber(false);
@@ -26,6 +45,7 @@ export default function Calculator() {
   };
 
   const handleDecimal = () => {
+    playClickSound();
     if (newNumber) {
       setDisplay('0.');
       setNewNumber(false);
@@ -35,6 +55,7 @@ export default function Calculator() {
   };
 
   const handleOperation = (op: string) => {
+    playClickSound();
     const current = parseFloat(display);
     
     if (previousValue === null) {
@@ -67,6 +88,7 @@ export default function Calculator() {
   };
 
   const handleEquals = () => {
+    playClickSound();
     if (operation && previousValue !== null) {
       const current = parseFloat(display);
       const prev = parseFloat(previousValue);
@@ -83,6 +105,7 @@ export default function Calculator() {
   };
 
   const handleClear = () => {
+    playClickSound();
     setDisplay('0');
     setPreviousValue(null);
     setOperation(null);
@@ -90,6 +113,7 @@ export default function Calculator() {
   };
 
   const handlePercent = () => {
+    playClickSound();
     if (previousValue !== null) {
       handleOperation('%');
       handleEquals();
@@ -100,19 +124,23 @@ export default function Calculator() {
   };
 
   const handleMemoryAdd = () => {
+    playClickSound();
     setMemory(memory + parseFloat(display));
   };
 
   const handleMemorySubtract = () => {
+    playClickSound();
     setMemory(memory - parseFloat(display));
   };
 
   const handleMemoryRecall = () => {
+    playClickSound();
     setDisplay(memory.toString());
     setNewNumber(true);
   };
 
   const handleMemoryClear = () => {
+    playClickSound();
     setMemory(0);
   };
 
